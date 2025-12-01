@@ -5,11 +5,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-public class Advisor {
+public class Client {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)  // Added strategy for clarity
-    private long advisorId;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long clientId;
 
     @Column(nullable = false)
     private String firstName;
@@ -26,23 +26,31 @@ public class Advisor {
     @Column(nullable = false)
     private String email;
 
-    // ADDED: Relationship to Client (One Advisor to Many Clients)
-    @OneToMany(mappedBy = "advisor", cascade = CascadeType.ALL)
-    private List<Client> clients = new ArrayList<>();
 
-    protected Advisor() {
+    @ManyToOne
+    @JoinColumn(name = "advisor_id", nullable = false)
+    private Advisor advisor;
+
+
+    @OneToMany(mappedBy = "client", cascade = CascadeType.ALL)
+    private List<Portfolio> portfolios = new ArrayList<>();
+
+
+    protected Client() {
     }
 
-    public Advisor(String firstName, String lastName, String address, String phone, String email) {
+    public Client(String firstName, String lastName, String address, String phone, String email, Advisor advisor) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.address = address;
         this.phone = phone;
         this.email = email;
+        this.advisor = advisor;
     }
 
-    public Long getAdvisorId() {
-        return advisorId;
+
+    public Long getClientId() {
+        return clientId;
     }
 
     public String getFirstName() {
@@ -85,12 +93,19 @@ public class Advisor {
         this.email = email;
     }
 
-    // ADDED: Getter and Setter for clients
-    public List<Client> getClients() {
-        return clients;
+    public Advisor getAdvisor() {
+        return advisor;
     }
 
-    public void setClients(List<Client> clients) {
-        this.clients = clients;
+    public void setAdvisor(Advisor advisor) {
+        this.advisor = advisor;
+    }
+
+    public List<Portfolio> getPortfolios() {
+        return portfolios;
+    }
+
+    public void setPortfolios(List<Portfolio> portfolios) {
+        this.portfolios = portfolios;
     }
 }
